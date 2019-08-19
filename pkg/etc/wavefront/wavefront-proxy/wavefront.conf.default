@@ -4,22 +4,24 @@
 #   Typically in /etc/wavefront/wavefront-proxy/wavefront.conf
 #
 ########################################################################################################################
-# Wavefront API endpoint URL. This will be provided to you by Wavefront, usually the same as URL of your Wavefront
-# instance, with "/api/" suffix.
+# Wavefront API endpoint URL. Usually the same as the URL of your Wavefront instance, with an `api`
+# suffix -- or Wavefront provides the URL.
 server=https://try.wavefront.com/api/
 
 # The hostname will be used to identify the internal proxy statistics around point rates, JVM info, etc.
 # We strongly recommend setting this to a name that is unique among your entire infrastructure, to make this
 # proxy easy to identify. This hostname does not need to correspond to any actual hostname or DNS entry; it's merely
-# string that we pass with the internal stats and ~proxy.* metrics.
+# a string that we pass with the internal stats and ~proxy.* metrics.
 #hostname=my.proxy.host.com
 
-# The Token is any valid API Token for your account that has "Proxy Management" permissions. This token can be
-# by clicking on the gear icon at the top right of the Wavefront site -> click on your email -> click on "API access".
+# The Token is any valid API Token for an account that has *Proxy Management* permissions. To get to the token:
+# 1. Click the gear icon at the top right in the Wavefront UI.
+# 2. Click your account name (usually your email)
+# 3. Click *API access*.
 #token=
 
 ####################################################### INPUTS #########################################################
-# Comma separated list of ports to listen on for Wavefront formatted data (Default: 2878)
+# Comma-separated list of ports to listen on for Wavefront formatted data (Default: 2878)
 pushListenerPorts=2878
 ## Maximum line length for received points in plaintext format on Wavefront/OpenTSDB/Graphite ports. Default: 32KB
 #pushListenerMaxReceivedLength=32768
@@ -27,31 +29,31 @@ pushListenerPorts=2878
 #pushListenerHttpBufferSize=16777216
 
 ## Graphite input settings.
-## If you enable either graphitePorts or picklePorts, make sure to uncomment and set 'graphiteFormat' as well.
-## Comma separated list of ports to listen on for collectd/Graphite formatted data (Default: none)
+## If you enable either `graphitePorts` or `picklePorts`, make sure to uncomment and set `graphiteFormat` as well.
+## Comma-separated list of ports to listen on for collectd/Graphite formatted data (Default: none)
 #graphitePorts=2003
-## Comma separated list of ports to listen on for Graphite pickle formatted data (from carbon-relay) (Default: none)
+## Comma-separated list of ports to listen on for Graphite pickle formatted data (from carbon-relay) (Default: none)
 #picklePorts=2004
 ## Which fields (1-based) should we extract and concatenate (with dots) as the hostname?
 #graphiteFormat=2
 ## Which characters should be replaced by dots in the hostname, after extraction? (Default: _)
 #graphiteDelimiters=_
-## Comma-separated list of fields (metric segments) to remove (1-based) (Default: none)
+## Comma-separated list of fields (metric segments) to remove (1-based). This is an optional setting. (Default: none)
 #graphiteFieldsToRemove=3,4,5
 
 ## DDI/Relay endpoint: in environments where no direct outbound connections to Wavefront servers are possible, you can
-## use another Wavefront Proxy that has outbound access, to act as a middleman relay and forward all the data
-## received on that endpoint (from Direct Data Ingestion clients and/or other proxies) to Wavefront servers.
+## use another Wavefront proxy that has outbound access to act as a relay and forward all the data received on that
+## endpoint (from direct data Ingestion clients and/or other proxies) to Wavefront servers.
 ## This setting is a comma-separated list of ports. (Default: none)
 #pushRelayListenerPorts=2978
 
-## Comma separated list of ports to listen on for OpenTSDB formatted data (Default: none)
+## Comma-separated list of ports to listen on for OpenTSDB formatted data (Default: none)
 #opentsdbPorts=4242
 
-## Comma separated list of ports to listen on for HTTP JSON formatted data (Default: none)
+## Comma-separated list of ports to listen on for HTTP JSON formatted data (Default: none)
 #jsonListenerPorts=3878
 
-## Comma separated list of ports to listen on for HTTP collectd write_http data (Default: none)
+## Comma-separated list of ports to listen on for HTTP collectd write_http data (Default: none)
 #writeHttpJsonListenerPorts=4878
 
 ################################################# DATA PREPROCESSING ###################################################
@@ -60,7 +62,7 @@ pushListenerPorts=2878
 
 # When using the Wavefront or TSDB data formats the Proxy will automatically look for a tag named
 # source= or host= (preferring source=) and treat that as the source/host within Wavefront.
-# customSourceTags is a comma separated, ordered list of additional tag keys to use if neither
+# customSourceTags is a comma-separated, ordered list of additional tag keys to use if neither
 # source= or host= is present
 customSourceTags=fqdn, hostname
 
@@ -195,8 +197,8 @@ customSourceTags=fqdn, hostname
 #traceZipkinListenerPorts=9411
 ## Custom application name for traces received on Zipkin's traceZipkinListenerPorts.
 #traceZipkinApplicationName=Zipkin
-## A comma separated, list of additional custom tag keys to include along as metric tags for the
-## derived RED(Request, Error, Duration) metrics. Applicable to Jaeger and Zipkin integration only.
+## Comma-separated list of additional custom tag keys to include along as metric tags for the derived
+## RED (Request, Error, Duration) metrics. Applicable to Jaeger and Zipkin integration only.
 #traceDerivedCustomTagKeys=tenant, env, location
 
 ## The following settings are used to configure trace data sampling:
@@ -208,7 +210,7 @@ customSourceTags=fqdn, hostname
 #traceAlwaysSampleErrors=false
 
 ########################################## HISTOGRAM ACCUMULATION SETTINGS #############################################
-## Histograms can be ingested in wavefront scalar and distribution format. For scalar samples ports can be specified for
+## Histograms can be ingested in Wavefront scalar and distribution format. For scalar samples ports can be specified for
 ## minute, hour and day granularity. Granularity for the distribution format is encoded inline. Before using any of
 ## these settings, reach out to Wavefront Support to ensure your account is enabled for native Histogram support and
 ## to optimize the settings for your specific use case.
@@ -216,13 +218,13 @@ customSourceTags=fqdn, hostname
 ## Accumulation parameters
 ## Directory for persisting proxy state, must be writable.
 #histogramStateDirectory=/var/spool/wavefront-proxy
-## Interval to write-back accumulation changes to disk in millis (only applicable when memory cache is enabled)
+## Interval to write back accumulation changes to disk in milliseconds (only applicable when memory cache is enabled).
 #histogramAccumulatorResolveInterval=5000
-## Interval to check for histograms ready to be sent to Wavefront, in millis
+## Interval to check for histograms ready to be sent to Wavefront, in milliseconds.
 #histogramAccumulatorFlushInterval=10000
 ## Max number of histograms to send to Wavefront in one flush (Default: no limit)
 #histogramAccumulatorFlushMaxBatchSize=4000
-## Whether to persist accumulation state. WARNING any unflushed histograms will be lost on proxy shutdown if disabled
+## Whether to persist accumulation state. WARNING any unflushed histograms will be lost on proxy shutdown if disabled.
 #persistAccumulator=true
 ## Maximum line length for received histogram data (Default: 65536)
 #histogramMaxReceivedLength=65536
